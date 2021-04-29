@@ -8,7 +8,7 @@ export class ProyectoEntity {
     @Column()
     nombre:string;
 
-    @Column({nullable:true})
+    @Column()
     estado:string;
 
     @Column()
@@ -17,11 +17,8 @@ export class ProyectoEntity {
     @Column()
     repositorio:string;
 
-    @Column()
-    manager1:string;
-
-    @Column()
-    manager2:string;
+    @Column("varchar",{name:"project_managers",array:true,nullable:true})
+    managers:string[];
 
     @Column({name:'ultimo_despliegue',type:'date'})
     ultimoDespliegue:string;

@@ -4,8 +4,7 @@ export class ProyectoDto {
     estado:string;
     codigo:string;
     repositorio:string;
-    manager1:string;
-    manager2:string;
+    managers:string[];
     ultimoDespliegue:string;
     primerDespliegue:string;
     tecnologia:string;
