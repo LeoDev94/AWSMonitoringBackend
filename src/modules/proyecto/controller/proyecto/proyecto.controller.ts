@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { ProyectoDto } from 'src/models/proyecto/proyecto-dto';
 import { ProyectoService } from '../../services/proyecto/proyecto.service';
 
@@ -21,6 +21,22 @@ export class ProyectoController {
         }
     }
 
+    @Delete(':id')
+    async deleteProyecto(@Param('id') id:number){
+        return await this.proyectoService.deleteProyecto(id)
+        .then((result)=>{
+            return {
+                result: result.deleted?'ok':'error',
+                data: result.deleted
+            }
+        }).catch((error)=>{
+            return {
+                result:'error',
+                data:error
+            }
+        });
+    }
+
     @Get()
     async getAll(){
         return{
@@ -34,6 +50,14 @@ export class ProyectoController {
         return {
             result: 'ok',
             data: await this.proyectoService.findOne(id)
+        }
+    }
+
+    @Get(':id/metricas')
+    async listMetricas(@Param('id') id:number){
+        return {
+            result:'ok',
+            data: await this.proyectoService.getMetricas(id)
         }
     }
 }

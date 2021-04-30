@@ -14,21 +14,24 @@ export class ProyectoEntity {
     @Column()
     codigo:string;
 
-    @Column()
+    @Column({nullable:true})
     repositorio:string;
 
-    @Column("varchar",{name:"project_managers",array:true,nullable:true})
+    @Column("varchar",{name:"project_managers",array:true})
     managers:string[];
 
-    @Column({name:'ultimo_despliegue',type:'date'})
+    @Column({name:'ultimo_despliegue',type:'date',nullable:true})
     ultimoDespliegue:string;
 
-    @Column({name: 'primer_despliegue',type:'date'})
+    @Column({name: 'primer_despliegue',type:'date',nullable:true})
     primerDespliegue:string;
 
-    @Column()
+    @Column({nullable:true})
     tecnologia:string;
 
-    @Column()
+    @Column({nullable:true})
     tipo:string;
+
+    @Column("varchar",{nullable:true,array:true})
+    instances:string[];
 }
