@@ -48,16 +48,57 @@ export class ProyectoService {
 
     async getMetricas(id:number){
         let proyeto = await this.proyectoRepository.findOne(id);
-        let instancias = proyeto.instances;
-        let params = {
-            Dimensions: instancias.map((instancia)=>{
-                return {
-                    Name:'InstanceId',
-                    Value: instancia
-                }
-            }),
+        let instancias = proyeto.instances?proyeto.instances:[];
+        if(instancias.length>0){
+            let params = {
+                Dimensions: instancias.map((instancia)=>{
+                    return {
+                        Name:'InstanceId',
+                        Value: instancia
+                    }
+                }),
+            };
+            const resp = await this.cw.listMetrics(params).promise();
+            return resp.Metrics.map(metric=>metric.MetricName);
+        }else{
+            return []
+        }
+    }
+
+    async getMetricData(id:number,metric:string){
+        let proyecto = await this.proyectoRepository.findOne(id);
+        const instances = proyecto.instances;
+        let dateNow = new Date();
+        let dateBefore = new Date();
+
+        dateBefore.setHours(dateBefore.getHours()-1);
+        let params:any = {
+            StartTime:dateBefore,
+            EndTime:dateNow,
+            MetricDataQueries:[]
         };
-        const resp = await this.cw.listMetrics(params).promise()
-        return resp.Metrics.map(metric=>metric.MetricName);
+        instances.forEach((inst,index)=>{
+            const metrica = {
+                Namespace:'AWS/EC2',
+                MetricName: metric,
+                Dimensions: [{
+                    Name:'InstanceId',
+                    Value: inst
+                }]
+            }
+            const query = {
+                Id:`m${index}`,
+                MetricStat:{
+                    Metric: metrica,
+                    Period:300,
+                    Stat:'Maximum'
+                },
+            }
+            params.MetricDataQueries.push(query);
+        });
+        
+        const resp = await this.cw.getMetricData(params).promise();
+        return resp.MetricDataResults;
+
     }
 }
