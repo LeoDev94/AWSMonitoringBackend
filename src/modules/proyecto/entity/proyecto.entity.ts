@@ -1,4 +1,5 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm"
+import { ErrorEntity } from "src/modules/errores/entity/error.entity";
+import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm"
 
 @Entity("Proyecto")
 export class ProyectoEntity {
@@ -34,4 +35,7 @@ export class ProyectoEntity {
 
     @Column("varchar",{nullable:true,array:true})
     instances:string[];
+
+    @OneToMany(()=>ErrorEntity,error=>error.proyecto,{cascade:true})
+    errores:ErrorEntity[]
 }

@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { Connection } from 'typeorm'
+import { ErrorEntity } from '../errores/entity/error.entity';
+import { ErroresModule } from '../errores/errores.module';
 import { ProyectoEntity } from '../proyecto/entity/proyecto.entity';
 import { ProyectoModule } from '../proyecto/proyecto.module';
 
@@ -14,10 +16,11 @@ import { ProyectoModule } from '../proyecto/proyecto.module';
             username: "postgres",
             password: "root",
             database: "awsm_db",
-            entities: [ProyectoEntity],
+            entities: [ProyectoEntity,ErrorEntity],
             synchronize: true
         }),
-        ProyectoModule
+        ProyectoModule,
+        ErroresModule
     ]
 })
 export class DatabaseModule {

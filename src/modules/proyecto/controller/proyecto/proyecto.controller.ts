@@ -68,4 +68,12 @@ export class ProyectoController {
             data: await this.proyectoService.getMetricData(id,metric)
         }
     }
+
+    @Get(':id/logs')
+    async getLogs(@Param('id') id:number){
+        return {
+            result:'ok',
+            data: await this.proyectoService.getLogs(id)
+        }
+    }
 }

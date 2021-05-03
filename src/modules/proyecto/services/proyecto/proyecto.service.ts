@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ProyectoDto } from 'src/models/proyecto/proyecto-dto';
 import { Repository } from 'typeorm';
 import { ProyectoEntity } from '../../entity/proyecto.entity';
-import { CloudWatch } from 'aws-sdk'
+import { CloudWatch,CloudWatchLogs } from 'aws-sdk'
 import { InjectAwsService } from 'nest-aws-sdk';
 
 @Injectable()
@@ -12,7 +12,9 @@ export class ProyectoService {
         @InjectRepository(ProyectoEntity)
         private proyectoRepository: Repository<ProyectoEntity>,
         @InjectAwsService(CloudWatch)
-        private cw:CloudWatch
+        private cw:CloudWatch,
+        @InjectAwsService(CloudWatchLogs)
+        private cwl:CloudWatchLogs
     ){}
 
     async findAll(){
@@ -26,6 +28,10 @@ export class ProyectoService {
     async updateProyecto(id:number,data:Partial<ProyectoDto>){
         await this.proyectoRepository.update(id,data)
         return await this.proyectoRepository.findOne(id);
+    }
+
+    async saveProyecto(proyecto:ProyectoEntity){
+        await this.proyectoRepository.save(proyecto);
     }
 
     async createProyecto(data:ProyectoDto){
@@ -100,5 +106,30 @@ export class ProyectoService {
         const resp = await this.cw.getMetricData(params).promise();
         return resp.MetricDataResults;
 
+    }
+    async getLogs(id:number){
+        let proyecto = await this.proyectoRepository.findOne(id);
+        const instances = proyecto.instances;
+        let logs = [];
+        if(instances){
+            for(const inst of instances){
+                const params = {
+                    logGroupName:'codedeploy-deployments-log',
+                    logStreamName:`${inst}-codedeploy-deployments-log`,
+                    limit:50
+                }
+                let data = await this.cwl.getLogEvents(params).promise();
+                let logErr={};
+                for(const evt of data.events){
+                    logErr = {
+                        mensaje:evt.message,
+                        horaOcurrencia: new Date(evt.timestamp),
+                        horaGuardado: new Date(evt.ingestionTime)
+                    }
+                    logs.push(logErr);
+                };
+            };
+        }
+        return logs;
     }
 }
