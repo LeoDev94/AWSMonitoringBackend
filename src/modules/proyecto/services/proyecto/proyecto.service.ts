@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { ProyectoEntity } from '../../entity/proyecto.entity';
 import { CloudWatch,CloudWatchLogs } from 'aws-sdk'
 import { InjectAwsService } from 'nest-aws-sdk';
+import UtilsClass from 'src/utils/costs';
 
 @Injectable()
 export class ProyectoService {
@@ -71,13 +72,14 @@ export class ProyectoService {
         }
     }
 
-    async getMetricData(id:number,metric:string){
+    async getMetricData(id:number,metric:string,timeframe:string){
         let proyecto = await this.proyectoRepository.findOne(id);
         const instances = proyecto.instances;
-        let dateNow = new Date();
-        let dateBefore = new Date();
+        const to = UtilsClass.getTimeFrame(timeframe);
+        let dateNow = to.fin;
+        let dateBefore = to.inicio;
 
-        dateBefore.setHours(dateBefore.getHours()-1);
+        //dateBefore.setHours(dateBefore.getHours()-1);
         let params:any = {
             StartTime:dateBefore,
             EndTime:dateNow,

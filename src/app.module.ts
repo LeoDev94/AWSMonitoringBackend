@@ -6,10 +6,11 @@ import { ErroresModule } from './modules/errores/errores.module';
 import { DatabaseModule } from './modules/database/database.module';
 import { AwsSdkModule } from 'nest-aws-sdk'
 import {CONFIG} from './conf/app.config'
-import { CloudWatch,CloudWatchLogs } from 'aws-sdk'
+import { CloudWatch,CloudWatchLogs,Pricing } from 'aws-sdk'
 import {ScheduleModule} from '@nestjs/schedule'
 import { TrabajosService } from './modules/general/services/trabajos/trabajos.service';
 import { GeneralModule } from './modules/general/general.module';
+import { ServicioModule } from './modules/servicio/servicio.module';
 
 
 @Module({
@@ -23,10 +24,15 @@ import { GeneralModule } from './modules/general/general.module';
         secretAccessKey: CONFIG.secretKey ,
         region: "us-east-2",
       },
-      services:[CloudWatch,CloudWatchLogs]
+      services:[CloudWatch,CloudWatchLogs,{service:Pricing,serviceOptions:{
+        accessKeyId: CONFIG.accessKey ,
+        secretAccessKey: CONFIG.secretKey ,
+        region: "us-east-1",
+      }}]
     }),
     ScheduleModule.forRoot(),
-    GeneralModule
+    GeneralModule,
+    ServicioModule
   ],
     controllers: [AppController],
     providers: [AppService, TrabajosService],

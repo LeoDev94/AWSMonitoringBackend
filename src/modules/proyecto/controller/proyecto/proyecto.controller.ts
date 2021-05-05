@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ProyectoDto } from 'src/models/proyecto/proyecto-dto';
 import { ProyectoService } from '../../services/proyecto/proyecto.service';
 
@@ -62,10 +62,10 @@ export class ProyectoController {
     }
 
     @Get(':id/metricas/:metric')
-    async getMetricData(@Param('id') id:number,@Param('metric') metric:string){
+    async getMetricData(@Param('id') id:number,@Param('metric') metric:string,@Query('timeframe') timeframe:string){
         return {
             result:'ok',
-            data: await this.proyectoService.getMetricData(id,metric)
+            data: await this.proyectoService.getMetricData(id,metric,timeframe)
         }
     }
 

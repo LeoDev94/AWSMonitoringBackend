@@ -5,6 +5,8 @@ import { ErrorEntity } from '../errores/entity/error.entity';
 import { ErroresModule } from '../errores/errores.module';
 import { ProyectoEntity } from '../proyecto/entity/proyecto.entity';
 import { ProyectoModule } from '../proyecto/proyecto.module';
+import { ServicioEntity } from '../servicio/entity/servicio.entity';
+import { ServicioModule } from '../servicio/servicio.module';
 
 
 @Module({
@@ -16,11 +18,12 @@ import { ProyectoModule } from '../proyecto/proyecto.module';
             username: "postgres",
             password: "root",
             database: "awsm_db",
-            entities: [ProyectoEntity,ErrorEntity],
+            entities: [ProyectoEntity,ErrorEntity,ServicioEntity],
             synchronize: true
         }),
         ProyectoModule,
-        ErroresModule
+        ErroresModule,
+        ServicioModule
     ]
 })
 export class DatabaseModule {
