@@ -134,4 +134,13 @@ export class ProyectoService {
         }
         return logs;
     }
+
+    async getDesplegados(){
+        let desplegados = await this.proyectoRepository.createQueryBuilder("proyecto").select(
+            `SUM(CASE WHEN proyecto.ultimoDespliegue is null THEN 0 else 1 END)`,"desplegados"
+        ).addSelect(`
+            SUM(CASE WHEN  proyecto.ultimoDespliegue is null THEN 1 else 0 END)
+        `,"no_desplegados").getRawMany()
+        return desplegados;
+    }
 }

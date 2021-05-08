@@ -19,4 +19,12 @@ export class ServicioController {
             data: await this.servicioService.getCostos(id)
         }
     }
+
+    @Get('instancias')
+    async getAllAsigned(){
+        return {
+            result:'ok',
+            data: await this.servicioService.findAllinstances()
+        }
+    }
 }

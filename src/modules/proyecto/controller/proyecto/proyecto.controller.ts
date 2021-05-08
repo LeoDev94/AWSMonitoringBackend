@@ -13,6 +13,14 @@ export class ProyectoController {
             data: await this.proyectoService.createProyecto(data)}
     }
 
+    @Get('desplegados')
+    async getDesplegados(){
+        return {
+            result:'ok',
+            data:await this.proyectoService.getDesplegados()
+        }
+    }
+
     @Put(':id')
     async updateProyecto(@Param('id') id:number,@Body() data:Partial<ProyectoDto>){
         return {
@@ -76,4 +84,6 @@ export class ProyectoController {
             data: await this.proyectoService.getLogs(id)
         }
     }
+
+
 }

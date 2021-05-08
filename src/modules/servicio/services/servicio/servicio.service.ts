@@ -39,4 +39,15 @@ export class ServicioService {
         
         return prices;
     }
+
+    async findAll(){
+        return await this.servicioRepository.find();
+    }
+
+    async findAllinstances(){
+        return await this.servicioRepository.createQueryBuilder("servicio")
+        .leftJoin("servicio.proyectos","proyecto")
+        .select(["servicio.id as id","servicio.nombre as nombre","COUNT(proyecto.id) as instancias"])
+        .groupBy("servicio.id").addGroupBy("servicio.nombre").getRawMany();
+    }
 }
