@@ -1,5 +1,6 @@
 import { ErrorEntity } from "src/modules/errores/entity/error.entity";
-import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm"
+import { ServicioEntity } from "src/modules/servicio/entity/servicio.entity";
+import {Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn} from "typeorm"
 
 @Entity("Proyecto")
 export class ProyectoEntity {
@@ -21,11 +22,11 @@ export class ProyectoEntity {
     @Column("varchar",{name:"project_managers",array:true})
     managers:string[];
 
-    @Column({name:'ultimo_despliegue',type:'date',nullable:true})
-    ultimoDespliegue:string;
+    @Column({name:'ultimo_despliegue',type:'timestamptz',nullable:true})
+    ultimoDespliegue:Date;
 
-    @Column({name: 'primer_despliegue',type:'date',nullable:true})
-    primerDespliegue:string;
+    @Column({name: 'primer_despliegue',type:'timestamptz',nullable:true})
+    primerDespliegue:Date;
 
     @Column({nullable:true})
     tecnologia:string;
@@ -38,4 +39,7 @@ export class ProyectoEntity {
 
     @OneToMany(()=>ErrorEntity,error=>error.proyecto,{cascade:true})
     errores:ErrorEntity[]
+
+    @ManyToMany(()=>ServicioEntity,servicio=>servicio.proyectos)
+    servicios:ServicioEntity[]
 }

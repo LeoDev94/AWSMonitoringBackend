@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ProyectoDto } from 'src/models/proyecto/proyecto-dto';
 import { ProyectoService } from '../../services/proyecto/proyecto.service';
 
@@ -11,6 +11,22 @@ export class ProyectoController {
         return {
             result:'ok',
             data: await this.proyectoService.createProyecto(data)}
+    }
+
+    @Get('desplegados')
+    async getDesplegados(){
+        return {
+            result:'ok',
+            data:await this.proyectoService.getDesplegados()
+        }
+    }
+
+    @Put('desplegar/:id')
+    async desplegarProyecto(@Param('id') id:number){
+        return {
+            result:'ok',
+            data:await this.proyectoService.desplegarProyecto(id)
+        }
     }
 
     @Put(':id')
@@ -62,10 +78,10 @@ export class ProyectoController {
     }
 
     @Get(':id/metricas/:metric')
-    async getMetricData(@Param('id') id:number,@Param('metric') metric:string){
+    async getMetricData(@Param('id') id:number,@Param('metric') metric:string,@Query('timeframe') timeframe:string){
         return {
             result:'ok',
-            data: await this.proyectoService.getMetricData(id,metric)
+            data: await this.proyectoService.getMetricData(id,metric,timeframe)
         }
     }
 
@@ -76,4 +92,6 @@ export class ProyectoController {
             data: await this.proyectoService.getLogs(id)
         }
     }
+
+
 }
