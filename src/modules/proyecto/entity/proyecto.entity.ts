@@ -22,11 +22,11 @@ export class ProyectoEntity {
     @Column("varchar",{name:"project_managers",array:true})
     managers:string[];
 
-    @Column({name:'ultimo_despliegue',type:'date',nullable:true})
-    ultimoDespliegue:string;
+    @Column({name:'ultimo_despliegue',type:'timestamptz',nullable:true})
+    ultimoDespliegue:Date;
 
-    @Column({name: 'primer_despliegue',type:'date',nullable:true})
-    primerDespliegue:string;
+    @Column({name: 'primer_despliegue',type:'timestamptz',nullable:true})
+    primerDespliegue:Date;
 
     @Column({nullable:true})
     tecnologia:string;

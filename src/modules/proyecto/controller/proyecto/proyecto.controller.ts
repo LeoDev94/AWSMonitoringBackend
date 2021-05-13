@@ -21,6 +21,14 @@ export class ProyectoController {
         }
     }
 
+    @Put('desplegar/:id')
+    async desplegarProyecto(@Param('id') id:number){
+        return {
+            result:'ok',
+            data:await this.proyectoService.desplegarProyecto(id)
+        }
+    }
+
     @Put(':id')
     async updateProyecto(@Param('id') id:number,@Body() data:Partial<ProyectoDto>){
         return {

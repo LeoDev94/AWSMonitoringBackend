@@ -140,7 +140,14 @@ export class ProyectoService {
             `SUM(CASE WHEN proyecto.ultimoDespliegue is null THEN 0 else 1 END)`,"desplegados"
         ).addSelect(`
             SUM(CASE WHEN  proyecto.ultimoDespliegue is null THEN 1 else 0 END)
-        `,"no_desplegados").getRawMany()
+        `,"no_desplegados").getRawOne()
         return desplegados;
+    }
+
+    async desplegarProyecto(id:number){
+        let proyecto = await this.proyectoRepository.findOne(id);
+        proyecto = UtilsClass.deployProject(proyecto);
+        this.proyectoRepository.save(proyecto);
+        return {instancias: proyecto.instances}
     }
 }

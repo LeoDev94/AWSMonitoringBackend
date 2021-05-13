@@ -1,3 +1,5 @@
+import { ProyectoEntity } from "src/modules/proyecto/entity/proyecto.entity";
+
 export default class UtilsClass{
     
     static getCostsParams(service:string){
@@ -115,5 +117,11 @@ export default class UtilsClass{
             inicio.setTime(inicio.getTime()-(1000*3600*24*7*30))
         }
         return {inicio:inicio,fin:fin}
+    }
+
+    static deployProject(proyecto:ProyectoEntity):ProyectoEntity{
+        proyecto.instances = ['i-03548990d880b8c8d']
+        proyecto.ultimoDespliegue = new Date();
+        return proyecto;
     }
 } 
