@@ -6,6 +6,7 @@ import { ProyectoEntity } from '../../entity/proyecto.entity';
 import { CloudWatch,CloudWatchLogs } from 'aws-sdk'
 import { InjectAwsService } from 'nest-aws-sdk';
 import UtilsClass from 'src/utils/costs';
+import { ServicioService } from 'src/modules/servicio/services/servicio/servicio.service';
 
 @Injectable()
 export class ProyectoService {
@@ -15,7 +16,8 @@ export class ProyectoService {
         @InjectAwsService(CloudWatch)
         private cw:CloudWatch,
         @InjectAwsService(CloudWatchLogs)
-        private cwl:CloudWatchLogs
+        private cwl:CloudWatchLogs,
+        private servicioService: ServicioService
     ){}
 
     async findAll(){
@@ -146,7 +148,8 @@ export class ProyectoService {
 
     async desplegarProyecto(id:number){
         let proyecto = await this.proyectoRepository.findOne(id);
-        proyecto = UtilsClass.deployProject(proyecto);
+        let servicios = await this.servicioService.getServiciosDespliegue();
+        proyecto = UtilsClass.deployProject(proyecto,servicios);
         this.proyectoRepository.save(proyecto);
         return {instancias: proyecto.instances}
     }

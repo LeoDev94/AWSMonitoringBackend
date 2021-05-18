@@ -8,6 +8,7 @@ import UtilsClass from 'src/utils/costs';
 @Module({
   imports:[TypeOrmModule.forFeature([ServicioEntity]),UtilsClass],
   providers: [ServicioService],
-  controllers: [ServicioController]
+  controllers: [ServicioController],
+  exports:[ServicioService]
 })
 export class ServicioModule {}

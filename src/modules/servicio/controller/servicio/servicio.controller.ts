@@ -27,4 +27,12 @@ export class ServicioController {
             data: await this.servicioService.findAllinstances()
         }
     }
+
+    @Get('despliegue')
+    async getServiciosDespliegue(){
+        return {
+            result:'ok',
+            data: await this.servicioService.getServiciosDespliegue()
+        }
+    }
 }

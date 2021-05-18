@@ -11,6 +11,7 @@ import {ScheduleModule} from '@nestjs/schedule'
 import { TrabajosService } from './modules/general/services/trabajos/trabajos.service';
 import { GeneralModule } from './modules/general/general.module';
 import { ServicioModule } from './modules/servicio/servicio.module';
+import { RepositorioModule } from './modules/repositorio/repositorio.module';
 
 
 @Module({
@@ -32,7 +33,8 @@ import { ServicioModule } from './modules/servicio/servicio.module';
     }),
     ScheduleModule.forRoot(),
     GeneralModule,
-    ServicioModule
+    ServicioModule,
+    RepositorioModule
   ],
     controllers: [AppController],
     providers: [AppService, TrabajosService],

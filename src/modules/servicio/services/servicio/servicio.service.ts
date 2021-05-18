@@ -50,4 +50,8 @@ export class ServicioService {
         .select(["servicio.id as id","servicio.nombre as nombre","COUNT(proyecto.id) as instancias"])
         .groupBy("servicio.id").addGroupBy("servicio.nombre").getRawMany();
     }
+
+    async getServiciosDespliegue(){
+        return await this.servicioRepository.createQueryBuilder("servicio").where("servicio.nombre IN (:...nombres)",{nombres:['EC2','S3','CodeDeploy','CodePipeline']}).getMany();
+    }
 }
