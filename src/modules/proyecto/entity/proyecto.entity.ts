@@ -1,4 +1,5 @@
 import { ErrorEntity } from "src/modules/errores/entity/error.entity";
+import { RepositorioEntity } from "src/modules/repositorio/entity/repositorio.entity";
 import { ServicioEntity } from "src/modules/servicio/entity/servicio.entity";
 import {Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn} from "typeorm"
 
@@ -40,6 +41,6 @@ export class ProyectoEntity {
     @OneToMany(()=>ErrorEntity,error=>error.proyecto,{cascade:true})
     errores:ErrorEntity[]
 
-    @ManyToMany(()=>ServicioEntity,servicio=>servicio.proyectos)
-    servicios:ServicioEntity[]
+    @OneToMany(()=>RepositorioEntity,repositorio=>repositorio.proyecto,{cascade:true})
+    repositorios:RepositorioEntity[];
 }

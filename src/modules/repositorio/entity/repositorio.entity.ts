@@ -3,7 +3,7 @@ import { ServicioEntity } from "src/modules/servicio/entity/servicio.entity";
 import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('repositorio')
-export class RespositorioEntity {
+export class RepositorioEntity {
     
     @PrimaryGeneratedColumn()
     id:number;
@@ -11,19 +11,19 @@ export class RespositorioEntity {
     @Column()
     nombre:string;
 
-    @Column()
+    @Column({nullable:true})
     instancia:string;
 
-    @Column()
+    @Column({name:"primer_despliegue",nullable:true})
     primerDespliegue:Date
 
-    @Column()
+    @Column({name:"ultimo_despliegue",nullable:true})
     ultimoDespliegue:Date
 
-   /* @ManyToOne(()=>ProyectoEntity,proyecto=>)
+    @ManyToOne(()=>ProyectoEntity,proyecto=>proyecto.repositorio)
     proyecto:ProyectoEntity
 
-    @ManyToMany()
-    servicios:ServicioEntity[]*/
+    @ManyToMany(()=>ServicioEntity,servicios=>servicios.repositorios)
+    servicios:ServicioEntity[]
 
 }

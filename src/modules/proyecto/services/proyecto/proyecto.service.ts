@@ -146,11 +146,13 @@ export class ProyectoService {
         return desplegados;
     }
 
-    async desplegarProyecto(id:number){
+    /*async desplegarProyecto(id:number,idRepo:number){
         let proyecto = await this.proyectoRepository.findOne(id);
         let servicios = await this.servicioService.getServiciosDespliegue();
-        proyecto = UtilsClass.deployProject(proyecto,servicios);
+        let repo = proyecto.repositorios.find(pro=>pro.id==idRepo);
+        repo = UtilsClass.deployProject(repo,servicios);
+        
         this.proyectoRepository.save(proyecto);
         return {instancias: proyecto.instances}
-    }
+    }*/
 }
