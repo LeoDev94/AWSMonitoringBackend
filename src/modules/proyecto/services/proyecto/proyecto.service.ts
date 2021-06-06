@@ -142,7 +142,7 @@ export class ProyectoService {
             `SUM(CASE WHEN proyecto.ultimoDespliegue is null THEN 0 else 1 END)`,"desplegados"
         ).addSelect(`
             SUM(CASE WHEN  proyecto.ultimoDespliegue is null THEN 1 else 0 END)
-        `,"no_desplegados").getRawOne()
+        `,"no_desplegados").getRawOne();
         return desplegados;
     }
 

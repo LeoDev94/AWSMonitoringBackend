@@ -3,7 +3,6 @@ export class ProyectoDto {
     nombre:string;
     estado:string;
     codigo:string;
-    repositorio:string;
     managers:string[];
     ultimoDespliegue:string;
     primerDespliegue:string;
