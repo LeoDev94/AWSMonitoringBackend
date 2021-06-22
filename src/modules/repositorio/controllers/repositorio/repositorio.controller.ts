@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { RepositorioDto } from 'src/models/repositorios/repositorio.dto';
 import { RespositorioService } from '../../services/respositorio/respositorio.service';
 
@@ -11,6 +11,38 @@ export class RepositorioController {
         return {
             result:'ok',
             data:await this.repositorioService.createRepo(data)
+        };
+    }
+
+    @Get(':id/desplegar')
+    async desplegarRepo(@Param('id') id:number){
+        return {
+            result:'ok',
+            data:await this.repositorioService.desplegarRepositorio(id)
+        };
+    }
+
+    @Get(':id/metricas')
+    async listMetricas(@Param('id') id:number){
+        return {
+            result:'ok',
+            data:await this.repositorioService.getMetricas(id)
+        };
+    }
+
+    @Get(':id/metricas/:metric')
+    async getMetricData(@Param('id') id:number,@Param('metric') metric:string,@Query('timeframe') timeframe:string){
+        return {
+            result:'ok',
+            data: await this.repositorioService.getMetricData(id,metric,timeframe)
+        }
+    }
+
+    @Get(':id/logs')
+    async getLogs(@Param('id') id:number){
+        return {
+            result:'ok',
+            data: await this.repositorioService.getLogs(id)
         };
     }
 

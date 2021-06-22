@@ -17,9 +17,6 @@ export class ProyectoEntity {
     @Column()
     codigo:string;
 
-    @Column({nullable:true})
-    repositorio:string;
-
     @Column("varchar",{name:"project_managers",array:true})
     managers:string[];
 
@@ -34,9 +31,6 @@ export class ProyectoEntity {
 
     @Column({nullable:true})
     tipo:string;
-
-    @Column("varchar",{nullable:true,array:true})
-    instances:string[];
 
     @OneToMany(()=>ErrorEntity,error=>error.proyecto,{cascade:true})
     errores:ErrorEntity[]

@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ProyectoDto } from 'src/models/proyecto/proyecto-dto';
+import { RepositorioDto } from 'src/models/repositorios/repositorio.dto';
 import { ProyectoService } from '../../services/proyecto/proyecto.service';
 
 @Controller('proyectos')
@@ -76,22 +77,53 @@ export class ProyectoController {
             data: await this.proyectoService.getMetricas(id)
         }
     }
-
+/*
     @Get(':id/metricas/:metric')
     async getMetricData(@Param('id') id:number,@Param('metric') metric:string,@Query('timeframe') timeframe:string){
         return {
             result:'ok',
             data: await this.proyectoService.getMetricData(id,metric,timeframe)
         }
-    }
+    }*/
 
-    @Get(':id/logs')
+   /* @Get(':id/logs')
     async getLogs(@Param('id') id:number){
         return {
             result:'ok',
             data: await this.proyectoService.getLogs(id)
+        };
+    }*/
+
+    @Get(':id/repositorios')
+    async getRepos(@Param('id') id:number){
+        return {
+            result:'ok',
+            data: await this.proyectoService.getRepositorios(id)
+        }
+
+    }
+
+    @Post(':id/repositorios')
+    async addRepo(@Param('id') id:number,@Body() data:RepositorioDto){
+        return {
+            result:'ok',
+            data: await this.proyectoService.addRepositorio(id,data)
         }
     }
 
+    @Post(':id/repositorios/bulk')
+    async addRepoBulk(@Param('id') id:number,@Body() data:RepositorioDto[]){
+       await this.proyectoService.addRepoBulk(id,data)
+        .then(()=>{return {result:'ok'}})
+        .catch((e)=>{return {result:'error',message:e}});
+    }
+
+    @Get(':id/costos')
+    async getCostos(@Param('id') id:number){
+        return {
+            result:'ok',
+            data:await this.proyectoService.getCostos(id)
+        }
+    }
 
 }

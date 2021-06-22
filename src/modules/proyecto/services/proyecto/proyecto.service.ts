@@ -7,21 +7,27 @@ import { CloudWatch,CloudWatchLogs } from 'aws-sdk'
 import { InjectAwsService } from 'nest-aws-sdk';
 import UtilsClass from 'src/utils/costs';
 import { ServicioService } from 'src/modules/servicio/services/servicio/servicio.service';
+import { RepositorioEntity } from 'src/modules/repositorio/entity/repositorio.entity';
+import { RepositorioDto } from 'src/models/repositorios/repositorio.dto';
+import { RespositorioService } from 'src/modules/repositorio/services/respositorio/respositorio.service';
 
 @Injectable()
 export class ProyectoService {
     constructor(
         @InjectRepository(ProyectoEntity)
         private proyectoRepository: Repository<ProyectoEntity>,
+        @InjectRepository(RepositorioEntity)
+        private repoRepository: Repository<RepositorioEntity>,
         @InjectAwsService(CloudWatch)
         private cw:CloudWatch,
         @InjectAwsService(CloudWatchLogs)
         private cwl:CloudWatchLogs,
-        private servicioService: ServicioService
+        private servicioService: ServicioService,
+        private reposService:RespositorioService
     ){}
 
     async findAll(){
-        return this.proyectoRepository.find();
+        return this.proyectoRepository.find({relations:['repositorios']});
     }
 
     async findOne(id:number){
@@ -56,25 +62,20 @@ export class ProyectoService {
     }
 
     async getMetricas(id:number){
-        let proyeto = await this.proyectoRepository.findOne(id);
-        let instancias = proyeto.instances?proyeto.instances:[];
-        if(instancias.length>0){
-            let params = {
-                Dimensions: instancias.map((instancia)=>{
-                    return {
-                        Name:'InstanceId',
-                        Value: instancia
-                    }
-                }),
+        let repos = await this.getRepositorios(id);
+        let metricas = []
+        for(let rep of repos){
+            let met = await this.reposService.getMetricas(rep.id);
+            let dat = {
+                id:rep.id,
+                data:met
             };
-            const resp = await this.cw.listMetrics(params).promise();
-            return resp.Metrics.map(metric=>metric.MetricName);
-        }else{
-            return []
+            metricas.push(dat);
         }
+        return metricas;
     }
 
-    async getMetricData(id:number,metric:string,timeframe:string){
+   /* async getMetricData(id:number,metric:string,timeframe:string){
         let proyecto = await this.proyectoRepository.findOne(id);
         const instances = proyecto.instances;
         const to = UtilsClass.getTimeFrame(timeframe);
@@ -110,8 +111,8 @@ export class ProyectoService {
         const resp = await this.cw.getMetricData(params).promise();
         return resp.MetricDataResults;
 
-    }
-    async getLogs(id:number){
+    }*/
+    /*async getLogs(id:number,idRepo:number){
         let proyecto = await this.proyectoRepository.findOne(id);
         const instances = proyecto.instances;
         let logs = [];
@@ -135,6 +136,12 @@ export class ProyectoService {
             };
         }
         return logs;
+    }*/
+
+    async getRepositorios(id:number){
+        let proyecto = await this.proyectoRepository.findOne(id,{relations:['repositorios']});
+        let repos = proyecto.repositorios;
+        return repos;
     }
 
     async getDesplegados(){
@@ -146,6 +153,42 @@ export class ProyectoService {
         return desplegados;
     }
 
+    async addRepositorio(id:number,data:RepositorioDto){
+        let proyecto = await this.proyectoRepository.findOne(id);
+        let repo = this.repoRepository.create(data);
+        if(!proyecto.repositorios){
+            proyecto.repositorios = [];
+        }
+        proyecto.repositorios.push(repo);
+        await this.proyectoRepository.save(proyecto);
+        return repo;
+    }
+
+    async addRepoBulk(id:number,data:RepositorioDto[]){
+        let proyecto = await this.proyectoRepository.findOne(id);
+        if(!proyecto.repositorios){
+            proyecto.repositorios = [];
+        }
+        for(const rep of data){
+            let repo = this.repoRepository.create(rep);
+            proyecto.repositorios.push(repo);
+        }
+        await this.proyectoRepository.save(proyecto);
+    }
+
+    async getCostos(id:number){
+        let repos = await this.getRepositorios(id);
+        let arrcostos = [];
+        for(let rep of repos){
+            let costos = await this.servicioService.getCostos(rep.id);
+            let dato = {
+                id:rep.id,
+                costos:costos
+            };
+            arrcostos.push(dato);
+        }
+        return arrcostos;
+    }
     /*async desplegarProyecto(id:number,idRepo:number){
         let proyecto = await this.proyectoRepository.findOne(id);
         let servicios = await this.servicioService.getServiciosDespliegue();

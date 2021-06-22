@@ -1,6 +1,6 @@
 import { ProyectoEntity } from "src/modules/proyecto/entity/proyecto.entity";
 import { ServicioEntity } from "src/modules/servicio/entity/servicio.entity";
-import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('repositorio')
 export class RepositorioEntity {
@@ -12,6 +12,9 @@ export class RepositorioEntity {
     nombre:string;
 
     @Column({nullable:true})
+    url:string;
+
+    @Column({nullable:true})
     instancia:string;
 
     @Column({name:"primer_despliegue",nullable:true})
@@ -20,7 +23,8 @@ export class RepositorioEntity {
     @Column({name:"ultimo_despliegue",nullable:true})
     ultimoDespliegue:Date
 
-    @ManyToOne(()=>ProyectoEntity,proyecto=>proyecto.repositorio)
+    @ManyToOne(()=>ProyectoEntity,proyecto=>proyecto.repositorios)
+    @JoinColumn()
     proyecto:ProyectoEntity
 
     @ManyToMany(()=>ServicioEntity,servicios=>servicios.repositorios)
