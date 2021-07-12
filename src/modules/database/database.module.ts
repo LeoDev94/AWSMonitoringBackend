@@ -19,7 +19,7 @@ import { ServicioModule } from '../servicio/servicio.module';
             port: 5432,
             username: "postgres",
             password: "root",
-            database: "awsm_db_test",
+            database: "awsm_db",
             entities: [ProyectoEntity,ErrorEntity,ServicioEntity,RepositorioEntity],
             synchronize: true
         }),
