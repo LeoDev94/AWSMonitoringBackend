@@ -1,4 +1,4 @@
-import { ProyectoEntity } from "src/modules/proyecto/entity/proyecto.entity";
+import { RepositorioEntity } from "src/modules/repositorio/entity/repositorio.entity";
 import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('Servicio')
@@ -10,7 +10,7 @@ export class ServicioEntity {
     @Column()
     nombre:string;
 
-    @ManyToMany(()=>ProyectoEntity,proyecto=>proyecto.servicios,{cascade:true})
+    @ManyToMany(()=>RepositorioEntity,repositorio=>repositorio.servicios,{cascade:true})
     @JoinTable()
-    proyectos:ProyectoEntity[]
+    repositorios:RepositorioEntity[]
 }

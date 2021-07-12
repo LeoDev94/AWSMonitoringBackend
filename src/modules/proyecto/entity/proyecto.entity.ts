@@ -1,4 +1,5 @@
 import { ErrorEntity } from "src/modules/errores/entity/error.entity";
+import { RepositorioEntity } from "src/modules/repositorio/entity/repositorio.entity";
 import { ServicioEntity } from "src/modules/servicio/entity/servicio.entity";
 import {Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn} from "typeorm"
 
@@ -16,9 +17,6 @@ export class ProyectoEntity {
     @Column()
     codigo:string;
 
-    @Column({nullable:true})
-    repositorio:string;
-
     @Column("varchar",{name:"project_managers",array:true})
     managers:string[];
 
@@ -34,12 +32,9 @@ export class ProyectoEntity {
     @Column({nullable:true})
     tipo:string;
 
-    @Column("varchar",{nullable:true,array:true})
-    instances:string[];
-
     @OneToMany(()=>ErrorEntity,error=>error.proyecto,{cascade:true})
     errores:ErrorEntity[]
 
-    @ManyToMany(()=>ServicioEntity,servicio=>servicio.proyectos)
-    servicios:ServicioEntity[]
+    @OneToMany(()=>RepositorioEntity,repositorio=>repositorio.proyecto,{cascade:true})
+    repositorios:RepositorioEntity[];
 }

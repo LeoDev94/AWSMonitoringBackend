@@ -1,4 +1,5 @@
 import { ProyectoEntity } from "src/modules/proyecto/entity/proyecto.entity";
+import { RepositorioEntity } from "src/modules/repositorio/entity/repositorio.entity";
 import { ServicioEntity } from "src/modules/servicio/entity/servicio.entity";
 
 export default class UtilsClass{
@@ -120,10 +121,10 @@ export default class UtilsClass{
         return {inicio:inicio,fin:fin}
     }
 
-    static deployProject(proyecto:ProyectoEntity,services:ServicioEntity[]):ProyectoEntity{
-        proyecto.instances = ['i-03548990d880b8c8d']
-        proyecto.servicios = services;
-        proyecto.ultimoDespliegue = new Date();
-        return proyecto;
+    static deployProject(repo:RepositorioEntity,services:ServicioEntity[]):RepositorioEntity{
+        repo.instancia = 'i-03548990d880b8c8d'
+        repo.servicios=services;
+        repo.ultimoDespliegue = new Date();
+        return repo;
     }
 } 

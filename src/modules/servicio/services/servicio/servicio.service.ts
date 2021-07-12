@@ -21,7 +21,10 @@ export class ServicioService {
     }
 
     async getCostos(id:number){
-        let servicios = await this.servicioRepository.createQueryBuilder("servicio").leftJoinAndSelect("servicio.proyectos","proyecto").where('proyecto.id=:pid',{pid:id}).getMany();
+        let servicios = await this.servicioRepository.createQueryBuilder("servicio")
+        .leftJoinAndSelect("servicio.repositorios","repositorio")
+        .where('repositorio.id=:pid',{pid:id})
+        .getMany();
         let objservicios = servicios.map(ser=>{return ser.nombre})
         let prices:any[]=[];
         for(let serv of objservicios){
@@ -46,8 +49,8 @@ export class ServicioService {
 
     async findAllinstances(){
         return await this.servicioRepository.createQueryBuilder("servicio")
-        .leftJoin("servicio.proyectos","proyecto")
-        .select(["servicio.id as id","servicio.nombre as nombre","COUNT(proyecto.id) as instancias"])
+        .leftJoin("servicio.repositorios","repositorio")
+        .select(["servicio.id as id","servicio.nombre as nombre","COUNT(repositorio.id) as instancias"])
         .groupBy("servicio.id").addGroupBy("servicio.nombre").getRawMany();
     }
 

@@ -19,7 +19,7 @@ export class TrabajosService {
         
         //@Cron('0 */5 * * * *')
         async leerLog(){
-            let proyectos = await this.proyectoService.findAll();
+            /*let proyectos = await this.proyectoService.findAll();
             proyectos.forEach((pro)=>{
                 const instances = pro.instances;
                 if(instances){
@@ -48,7 +48,7 @@ export class TrabajosService {
                 }
             })
             
-            
+            */
         }
         
     }
